@@ -49,6 +49,12 @@ const Feed = () => {
     setFilteredPosts(searchResults);
   }
 
+  const handleTagClick = (tag) => {
+    setSearchText(tag);
+    const searchResults = filterPrompts(tag);
+    setFilteredPosts(searchResults);
+  }
+
 
   return (
     <section className='feed'>
@@ -63,7 +69,7 @@ const Feed = () => {
         onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
         />
         </form>
-        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={()=>{}}/>
+        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={handleTagClick}/>
     </section>
   )
 }
