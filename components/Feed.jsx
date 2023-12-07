@@ -33,7 +33,7 @@ const Feed = () => {
   const [searchText, setSearchText] = useState('')
   const [filteredPosts, setFilteredPosts] = useState([]);
 
-  const { data: posts } = useSWR('/api/prompt', fetcher)
+  const { data: posts } = useSWR('/api/prompt', fetcher, {revalidateOnMount: true})
 
   const filterPrompts = (searchtext) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
