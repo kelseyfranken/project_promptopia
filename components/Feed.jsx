@@ -1,10 +1,12 @@
 "use client"
-import { useState, useEffect } from 'react'
+import useSWR from 'swr';
+import { useState } from 'react'
 import PromptCard from './PromptCard'
 
+const fetcher = url => fetch(url).then(r => r.json())
 
 const PromptCardList = ({data, handleTagClick}) => {
-  return (
+  if (data) return (
     <div className='mt-16 prompt_layout'>
       {data.map((post) => (
         <PromptCard
@@ -13,25 +15,26 @@ const PromptCardList = ({data, handleTagClick}) => {
         handleTagClick={handleTagClick}
         />
       ))}
-
     </div>
+  ) 
+  return (
+  <div className='mt-16 prompt_layout'>
+  {[...Array(5)].map((_, i) => (
+    <PromptCard
+    key={`prompt-card-loading-${i}`}
+    handleTagClick={handleTagClick}
+    />
+  ))}
+</div>
   )
 }
 
 const Feed = () => {
   const [searchText, setSearchText] = useState('')
-  const [posts, setPosts] = useState([]);
   const [filteredPosts, setFilteredPosts] = useState([]);
 
-  useEffect(()=>{
-    const fetchPosts = async () => {
-      const response = await fetch('/api/prompt');
-      const data = await response.json();
-      setPosts(data);
-    }
-    fetchPosts();
-  }, []);
-  
+  const { data: posts } = useSWR('/api/prompt', fetcher)
+
   const filterPrompts = (searchtext) => {
     const regex = new RegExp(searchtext, "i"); // 'i' flag for case-insensitive search
     const searchResults = posts.filter(
@@ -69,7 +72,7 @@ const Feed = () => {
         onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
         />
         </form>
-        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={handleTagClick}/>
+        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={handleTagClick}/>)
     </section>
   )
 }

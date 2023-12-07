@@ -1,23 +1,16 @@
 
 "use client";
 import Profile from "@components/Profile";
-import { useState, useEffect } from "react";
+import useSWR from 'swr';
+
+const fetcher = url => fetch(url).then(r => r.json())
+
 
 export default function UserProfile({params, searchParams}) {
-  const [posts, setPosts] = useState([]);
   const {userId} = params;
   const {username} = searchParams;
+  const { data: posts } = useSWR(userId ? `/api/users/${userId}/posts` : '', fetcher)
 
-  useEffect(()=>{
-    const fetchPosts = async () => {
-      const response = await fetch(`/api/users/${userId}/posts`);
-      const data = await response.json();
-      setPosts(data);
-    }
-    if(userId) {
-        fetchPosts();
-    }
-  }, [])
   return (
     <Profile
     name={`${username}'s`}

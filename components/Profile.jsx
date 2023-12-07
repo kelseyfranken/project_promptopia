@@ -2,7 +2,8 @@ import React from 'react'
 import PromptCard from './PromptCard'
 
 const PromptCardList = ({data, handleEdit, handleDelete}) => {
-  return (
+
+  if (data) return (
     <div className='mt-10 prompt_layout'>
       {data.map((post) => (
         <PromptCard
@@ -12,9 +13,18 @@ const PromptCardList = ({data, handleEdit, handleDelete}) => {
         handleDelete={() => handleDelete && handleDelete(post)}
         />
       ))}
-
     </div>
+  ) 
+  return (
+  <div className='mt-10 prompt_layout'>
+  {[...Array(3)].map((_, i) => (
+    <PromptCard
+    key={`prompt-card-loading-${i}`}
+    />
+  ))}
+</div>
   )
+
 }
 
 const Profile = ({name, desc, data, handleDelete, handleEdit}) => {

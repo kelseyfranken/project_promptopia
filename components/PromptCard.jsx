@@ -2,12 +2,26 @@ import React, { useState } from 'react'
 import Image from 'next/image'
 import { useSession } from 'next-auth/react';
 import { usePathname, useRouter } from 'next/navigation';
+import { Skeleton } from './Skeleton';
 
 const PromptCard = ({ post, handleTagClick, handleEdit, handleDelete }) => {
   const [copied, setCopied] = useState("");
   const {data: session} = useSession();
   const router = useRouter();
   const pathName = usePathname();
+
+  if (!post) return (
+    <div className='prompt_card'>
+      <div className='flex justify-between items-start gap-5'>
+        <div className='flex-1 flex justify-start items-center gap-3 cursor-pointer'  >
+          <div className='flex flex-col gap-2'>
+            <Skeleton className='w-20 h-4' />
+            <Skeleton className='w-20 h-4' />
+          </div>
+        </div>
+      </div>
+    </div>
+  )
   const profileLink = post.creator._id === session?.user.id ? '/profile' : `/profile/${post.creator._id}?username=${post.creator.username}`
 
   const handleCopy = () => {

@@ -1,16 +1,19 @@
 "use client"
-
-import { useState, useEffect } from "react";
+import useSWR from 'swr';
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 
 import Profile from "@components/Profile";
 
+const fetcher = url => fetch(url).then(r => r.json())
+
+
 const MyProfile = (props) => {
 
     const {data: session} = useSession();
+  
+    const { data: posts } = useSWR(session?.user.id ? `/api/users/${session?.user.id}/posts` : '', fetcher)
 
-    const [posts, setPosts] = useState([]);
 
     const router = useRouter();
 
@@ -34,17 +37,6 @@ const MyProfile = (props) => {
       }
 
     }
-
-    useEffect(()=>{
-        const fetchPosts = async () => {
-          const response = await fetch(`/api/users/${session?.user.id}/posts`);
-          const data = await response.json();
-          setPosts(data);
-        }
-        if(session?.user.id) {
-            fetchPosts();
-        }
-      }, [])
 
   return(
     <Profile
