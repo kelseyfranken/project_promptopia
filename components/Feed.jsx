@@ -72,7 +72,7 @@ const Feed = () => {
         onKeyDown={(e) => e.key === 'Enter' && e.preventDefault()}
         />
         </form>
-        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={handleTagClick}/>)
+        <PromptCardList data={searchText ? filteredPosts : posts}  handleTagClick={handleTagClick}/>
     </section>
   )
 }
